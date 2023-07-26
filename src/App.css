@@ -1,0 +1,18 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.ChatInfoDiv{
+    display: flex;
+    width: 100%;
+    padding: 5%;
+}
+.ChatInfoDiv:hover{
+    background-color: #2f2d52;
+}
+.addFriendBtn:hover{
+    cursor: pointer;
+}
+.sendBtn:hover{
+    cursor: pointer;
+}
