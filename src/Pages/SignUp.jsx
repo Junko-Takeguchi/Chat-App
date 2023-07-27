@@ -1,18 +1,18 @@
 import Grid from "@mui/material/Grid";
-import {ThemeProvider} from "@mui/material/styles";
 import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
+import {useState} from "react";
+import axios from "axios";
 
 function SignUp() {
+    const [username, setUserName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [password, setPassword] = useState("");
     function handleSubmit(e) {
         e.preventDefault();
     }
@@ -37,54 +37,69 @@ function SignUp() {
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
-                                    autoComplete="given-name"
                                     name="firstName"
                                     required
                                     fullWidth
-                                    id="firstName"
                                     label="First Name"
                                     autoFocus
+                                    value={firstName}
+                                    onChange={(e)=>{
+                                        setFirstName(e.target.value);
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="lastName"
                                     label="Last Name"
                                     name="lastName"
-                                    autoComplete="family-name"
+                                    value={lastName}
+                                    onChange={(e)=>{
+                                        setLastName(e.target.value);
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
+                                    label="Username"
+                                    value={username}
+                                    onChange={(e)=>{
+                                        setUserName(e.target.value);
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
-                                    name="password"
                                     label="Password"
                                     type="password"
-                                    id="password"
                                     autoComplete="new-password"
+                                    value={password}
+                                    onChange={(e)=>{
+                                        setPassword(e.target.value);
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                             </Grid>
                         </Grid>
                         <Button
-                            type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            onClick={()=>{
+                                axios.post('http://localhost:3000/signup',{
+                                    //username,firstName, lastName, password
+                                    username: username,
+                                    firstName: firstName,
+                                    lastName: lastName,
+                                    password: password
+                                }).catch(e=>console.log(e));
+                            }}
                         >
                             Sign Up
                         </Button>

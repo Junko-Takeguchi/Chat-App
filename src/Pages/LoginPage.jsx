@@ -11,14 +11,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useState} from "react";
+import axios from "axios";
 function LoginPage() {
+    const [username, setUserName] = useState("");
+    const [password, setPassword] = useState("");
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
     };
 
     return (
@@ -44,6 +43,10 @@ function LoginPage() {
                             fullWidth
                             label="Username"
                             autoFocus
+                            value={username}
+                            onChange={(e)=>{
+                                setUserName(e.target.value);
+                            }}
                         />
                         <TextField
                             margin="normal"
@@ -52,14 +55,26 @@ function LoginPage() {
                             name="password"
                             label="Password"
                             type="password"
-                            id="password"
                             autoComplete="current-password"
+                            value={password}
+                            onChange={(e)=>{
+                                setPassword(e.target.value);
+                            }}
                         />
                         <Button
-                            type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            onClick={()=>{
+                                axios.post('http://localhost:3000/login',{
+                                    //username,firstName, lastName, password
+                                    username: username,
+                                    password: password
+                                })
+                                    .then((res)=>res.data)
+                                    .then((data)=>localStorage.setItem("chatToken",data.token))
+                                    .catch((e)=>console.log(e));
+                            }}
                         >
                             Sign In
                         </Button>
