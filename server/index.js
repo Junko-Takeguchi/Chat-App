@@ -3,6 +3,7 @@ const mongoose = require('mongoose').default;
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const {Users, Chats} = require('./dB/models');
+const dotenv = require('dotenv').config();
 
 const app = express();
 
@@ -10,9 +11,9 @@ app.use(express.json());
 app.use(cors());
 
 const PORT = 3000;
-const secret = "jkfbkjdfkjbkdzklbk;kd";
+const secret = process.env.SECRET;
 
-mongoose.connect('mongodb+srv://akshit:Akki-123@cluster0.jmjzcjf.mongodb.net/Chat-App',{useNewUrlParser: true, useUnifiedTopology: true, dbName: "Chat-App" })
+mongoose.connect(process.env.URI,{useNewUrlParser: true, useUnifiedTopology: true, dbName: "Chat-App" })
     .catch((e)=>console.log(e));
 
 function createToken(USER) {
