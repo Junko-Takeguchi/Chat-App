@@ -9,11 +9,9 @@ import {userState} from "../Store/userAtom.js";
 
 function Sidebar({onlinePeople}) {
 
-    return <div style={{flex: 1, borderRight: "1px solid #3e3c61", backgroundColor:"#3e3c61", overflow: "hidden", display:"flex", flexDirection:"column"}}>
+    return <div style={{flex: 1, borderRight: "1px solid #3e3c61", backgroundColor:"#3e3c61", overflow: "hidden", margin:0, padding:0, display:"flex", flexDirection:"column"}}>
         <Navbar></Navbar>
-        <br/>
-        <Divider></Divider>
-        <div style={{display:"flex", justifyContent:"center", flexWrap:"wrap", marginTop:"3%"}}>
+        <div style={{display:"flex", justifyContent:"center", flexWrap:"wrap", marginTop:"0"}}>
             {onlinePeople.map((person)=>{
                 return <ChatInfo person={person}></ChatInfo>
             })}
