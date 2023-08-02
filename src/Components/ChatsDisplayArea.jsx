@@ -10,7 +10,6 @@ function ChatsDisplayArea({user}) {
             <Message user={user}></Message>
             <Message user={user}></Message>
             <Message user={user}></Message>
-
         </div>
     );
 }

@@ -1,23 +1,17 @@
-const mongoose = require('mongoose').default
+import mongoose from 'mongoose';
 
 const userSchema = mongoose.Schema({
     username: String,
-    firstName:String,
-    lastName:String,
+    firstName: String,
+    lastName: String,
     password: String,
-    friends: [{type: mongoose.Types.ObjectId, ref: 'Users'}]
 });
 
 const chatSchema = mongoose.Schema({
     message: String,
-    senderId: {type: mongoose.Types.ObjectId, ref:'Users'},
-    receiverId: {type: mongoose.Types.ObjectId, ref:'Users'},
+    senderId: { type: mongoose.Types.ObjectId, ref: 'Users' },
+    receiverId: { type: mongoose.Types.ObjectId, ref: 'Users' },
 });
 
-const Users = mongoose.model("users", userSchema);
-const Chats = mongoose.model('Chats', chatSchema);
-
-module.exports = {
-    Users,
-    Chats
-}
+export const Users = mongoose.model('users', userSchema);
+export const Chats = mongoose.model('Chats', chatSchema);

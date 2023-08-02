@@ -1,55 +1,48 @@
-const express = require('express');
-const mongoose = require('mongoose').default;
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const {Users, Chats} = require('./dB/models');
-const dotenv = require('dotenv').config();
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import authRouter from './Routes/auth.js';
+import dotenv from 'dotenv';
+import {WebSocketServer} from "ws";
+import cookieParser from 'cookie-parser';
+import jwt from "jsonwebtoken";
+dotenv.config();
 
 const app = express();
 
-app.use(express.json());
-app.use(cors());
-
 const PORT = 3000;
-const secret = process.env.SECRET;
+export const secret = process.env.SECRET;
 
-mongoose.connect(process.env.URI,{useNewUrlParser: true, useUnifiedTopology: true, dbName: "Chat-App" })
-    .catch((e)=>console.log(e));
+mongoose
+    .connect(process.env.URI, { dbName: "Chat-App" })
+    .catch((e) => console.log(e));
 
-function createToken(USER) {
-    const toEncrypt = {username: USER.username};
-    return jwt.sign(toEncrypt,secret,{expiresIn: '1h'});
-}
-app.post('/signup', async (req,res)=>{
-    const {username,firstName, lastName, password} = req.body;
-    const existingAdmin = await Users.findOne({username});
-    if(existingAdmin){
-        res.status(401).send('existing admin');
-    }
-    else{
-        const newAdmin = new Users({username: username,firstName:firstName,lastName:lastName, password : password});
-        await newAdmin.save();
-        const token = createToken(newAdmin);
-        res.json({
-            message: 'Admin created successfully',
-            token
-        });
-    }
+app.use(express.json());
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:5173',
+}));
+app.use(cookieParser());
+app.use('',authRouter);
+
+const server = app.listen(PORT, () => {
+    console.log(`listening on ${PORT}...${typeof process.env.URI}`);
 });
 
-app.post('/login', async (req,res)=>{
-    const {username, password} = req.body;
-    const existingAdmin = await Users.findOne({username: username, password: password});
-    if(existingAdmin){
-        const token = createToken(existingAdmin);
-        res.json({
-            message: 'Logged in successfully',
-            token
-        });
+const wss = new WebSocketServer({server});
+
+wss.on("connection", (connection, req)=>{
+    const urlParams = new URLSearchParams(req.url.split("?")[1]);
+    const token = urlParams.get('token');
+    jwt.verify(token,secret,{},(err, data)=>{
+        if (err){
+            console.log(err);
+        }
+        connection.username = data.username;
+    });
+    for (const client of [...wss.clients]) {
+        client.send(JSON.stringify({
+            online: [...wss.clients].map(c => c.username),
+        }))
     }
 });
-
-app.listen(PORT,()=>{
-    console.log(`listening on ${PORT}...`)
-})
-

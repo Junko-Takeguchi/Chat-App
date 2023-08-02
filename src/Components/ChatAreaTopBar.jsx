@@ -6,9 +6,6 @@ function ChatAreaTopBar({user}) {
     return(
         <div style={{display:"flex", justifyContent: "space-between", alignItems: "center", backgroundColor:"#5e588c", height:"10%"}}>
             <Typography variant="h6" sx={{color:"#d2d2d9", marginLeft:"1%"}}>{user}</Typography>
-            <button className="addFriendBtn" style={{marginRight:"1%"}}>
-                <PersonAddAlt1Icon></PersonAddAlt1Icon>
-            </button>
         </div>
     );
 }
