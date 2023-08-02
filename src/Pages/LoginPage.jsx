@@ -8,10 +8,7 @@ import Container from '@mui/material/Container';
 import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {useSetRecoilState} from "recoil";
-import {userState} from "../Store/userAtom.js";
 function LoginPage() {
-    const setUsername = useSetRecoilState(userState);
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -73,10 +70,6 @@ function LoginPage() {
                                     .then((res)=>res.data)
                                     .then((data)=> {
                                         localStorage.setItem("token", data.token);
-                                        setUsername((prevUser) => ({
-                                            ...prevUser,
-                                            username: username,
-                                        }));
                                         navigate('/chat');
                                     })
                                     .catch((e)=>console.log(e));

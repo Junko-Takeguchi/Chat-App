@@ -10,28 +10,26 @@ function HomePage() {
     const currentUser = useRecoilValue(userState);
     const [ws, setWs] = useState(null);
     const [onlinePeople, setOnlinePeople] = useState([]);
-    useEffect(()=>{
+
+    useEffect(() => {
         const token = localStorage.getItem('token');
-        const ws = new WebSocket(`ws://localhost:3000?token=${token}`)
+        const ws = new WebSocket(`ws://localhost:3000?token=${token}`);
         setWs(ws);
+
         const updateOnlinePeople = (msg) => {
             if (msg.online.length !== 0) {
-                let tempArr = [msg.online[0]];
-                for (let i = 0; i < msg.online.length; i++) {
-                    if (i > 0 && msg.online[i] !== msg.online[i - 1]) {
-                        if (msg.online[i] !== currentUser.username) {
-                            tempArr.push(msg.online[i]);
-                        }
-                    }
-                }
+                const onlineSet = new Set(msg.online);
+                onlineSet.delete(currentUser.username);
+                const tempArr = Array.from(onlineSet);
                 setOnlinePeople(tempArr);
             }
         };
-        ws.addEventListener('message', (e)=>{
-                const msg = JSON.parse(e.data);
-                updateOnlinePeople(msg);
+
+        ws.addEventListener('message', (e) => {
+            const msg = JSON.parse(e.data);
+            updateOnlinePeople(msg);
         });
-    },[]);
+    }, [currentUser]);
     return (
         <div style={{border: "1px solid white", borderRadius:"5px", width:"100vw", height:"100vh", display: "flex"}}>
             <Sidebar onlinePeople={onlinePeople}></Sidebar>
