@@ -1,21 +1,22 @@
 import Sidebar from "../Components/Sidebar.jsx";
-import ChatAreaTopBar from "../Components/ChatAreaTopBar.jsx";
-import ChatsDisplayArea from "../Components/ChatsDisplayArea.jsx";
-import InputArea from "../Components/InputArea.jsx";
 import {useEffect, useState} from "react";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {userState} from "../Store/userAtom.js";
+import InitState from "../Components/InitState.jsx";
+import MainArea from "../Components/MainArea.jsx";
+import {messagesState} from "../Store/messageAtom.js";
 
 function HomePage() {
     const currentUser = useRecoilValue(userState);
     const [ws, setWs] = useState(null);
     const [onlinePeople, setOnlinePeople] = useState([]);
+    const [selectedChat, setSelectedChat] = useState(null);
+    const setMessages = useSetRecoilState(messagesState);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         const ws = new WebSocket(`ws://localhost:3000?token=${token}`);
         setWs(ws);
-
         const updateOnlinePeople = (msg) => {
             if (msg.online.length !== 0) {
                 const onlineSet = new Set(msg.online);
@@ -27,17 +28,24 @@ function HomePage() {
 
         ws.addEventListener('message', (e) => {
             const msg = JSON.parse(e.data);
-            updateOnlinePeople(msg);
+            if (msg.online){
+                updateOnlinePeople(msg);
+            }
+            else if ('text' in msg){
+                setMessages(prev => ([...prev, {
+                    receiver: selectedChat,
+                    text: msg.text,
+                    messageId: msg.messageId
+                }]));
+                // console.log(messages);
+            }
         });
     }, [currentUser]);
     return (
-        <div style={{border: "1px solid white", borderRadius:"5px", width:"100vw", height:"100vh", display: "flex"}}>
-            <Sidebar onlinePeople={onlinePeople}></Sidebar>
-            <div style={{flex:2, backgroundColor:"#dddbf5"}}>
-                <ChatAreaTopBar user="John"></ChatAreaTopBar>
-                <ChatsDisplayArea user="John"></ChatsDisplayArea>
-                <InputArea></InputArea>
-            </div>
+        <div style={{width:"100vw", height:"100vh", display: "flex", overflow: "auto"}}>
+            <InitState/>
+            <Sidebar onlinePeople={onlinePeople} selectedChat={selectedChat} setSelectedChat={setSelectedChat}></Sidebar>
+            <MainArea ws={ws} selectedChat={selectedChat}/>
         </div>
     );
 }

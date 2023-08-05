@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import {WebSocketServer} from "ws";
 import cookieParser from 'cookie-parser';
 import jwt from "jsonwebtoken";
+import {Chats, Users} from "./dB/models.js";
 dotenv.config();
 
 const app = express();
@@ -39,10 +40,32 @@ wss.on("connection", (connection, req)=>{
             console.log(err);
         }
         connection.username = data.username;
+        connection.userId = data.userId;
     });
     for (const client of [...wss.clients]) {
         client.send(JSON.stringify({
             online: [...wss.clients].map(c => c.username),
         }))
     }
+    connection.on("message", async (message)=>{
+        const parsedMessage = JSON.parse(message);
+        const {receiver, text} = parsedMessage.message;
+        if(receiver && text){
+            console.log(connection.userId);
+            const receiverId = await Users.findOne({username: receiver});
+            const msgDoc = await Chats.create({
+                message: text,
+                senderId: connection.userId,
+                receiverId: receiverId
+            });
+
+            [...wss.clients]
+                .filter(c => c.username === receiver)
+                .forEach(c => c.send(JSON.stringify({
+                    text,
+                    sender: c.username,
+                    messageId: msgDoc._id
+                })));
+        }
+    });
 });

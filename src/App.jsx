@@ -12,7 +12,6 @@ function App() {
     return(
         <RecoilRoot>
             <Router>
-                <InitState/>
                 <Routes>
                     <Route path={"/"} element={<LoginPage />}/>
                     <Route path={"/signup"} element={<SignUp />}/>
@@ -22,22 +21,4 @@ function App() {
         </RecoilRoot>
     )
 }
-
-function InitState() {
-    const setUser = useSetRecoilState(userState);
-    const user = useRecoilValue(userDataSelector);
-
-    useEffect(() => {
-        // Update the 'userState' atom with the data from the selector
-        setUser({
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-        });
-    }, [user, setUser]);
-    return <></>;
-}
-
-
-
 export default App

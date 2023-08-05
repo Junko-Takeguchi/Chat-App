@@ -44,7 +44,13 @@ function Navbar() {
                         }}>Add To Chat</Button>
                     </DialogActions>
                 </Dialog>
-                <Button variant="contained" size="small" sx={{ marginRight: "2%" }}>LOGOUT</Button>
+                <Button variant="contained"
+                        size="small"
+                        sx={{ marginRight: "2%" }}
+                        onClick={() => {
+
+                        }}
+                >LOGOUT</Button>
             </div>
         </div>
     );

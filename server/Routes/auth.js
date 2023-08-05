@@ -6,7 +6,7 @@ import { secret } from "../index.js";
 const router = express.Router();
 
 function createToken(USER) {
-    const toEncrypt = { username: USER.username };
+    const toEncrypt = { username: USER.username, _id: USER._id };
     return jwt.sign(toEncrypt, secret, { expiresIn: '1h' });
 }
 const authenticateJwt = (req, res, next) => {

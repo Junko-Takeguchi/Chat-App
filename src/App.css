@@ -2,10 +2,24 @@ body{
     margin: 0;
     padding: 0;
 }
-.ChatInfoDiv{
+.ChatInfoDiv {
     display: flex;
     width: 100%;
     padding: 5%;
+    position: relative; /* Add this to make the absolute positioning work */
+}
+
+.AvatarWrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px; /* Adjust this value to control the width of the vertical bar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 10px; /* Ensure the bar has the same rounded border as the ChatInfoDiv */
+    border-bottom-left-radius: 10px;
 }
 .ChatInfoDiv:hover{
     background-color: #2f2d52;
