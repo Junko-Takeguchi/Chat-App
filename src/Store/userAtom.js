@@ -5,6 +5,7 @@ import axios from 'axios';
 export const userState = atom({
     key: 'userState',
     default: {
+        userId: null,
         username: null,
         firstName: null,
         lastName: null,

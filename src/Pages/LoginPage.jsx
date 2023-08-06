@@ -74,6 +74,7 @@ function LoginPage() {
                                     .then((data)=> {
                                         setUsernameState((prevUser) => ({
                                             ...prevUser,
+                                            userId: data.userId,
                                             username: username,
                                         }));
                                         localStorage.setItem("token", data.token);

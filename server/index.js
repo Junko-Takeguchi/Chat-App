@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import authRouter from './Routes/auth.js';
+import authRouter from './Routes/routes.js';
 import dotenv from 'dotenv';
 import {WebSocketServer} from "ws";
 import cookieParser from 'cookie-parser';
@@ -49,13 +49,13 @@ wss.on("connection", (connection, req)=>{
     }
     connection.on("message", async (message)=>{
         const parsedMessage = JSON.parse(message);
-        const {receiver, text} = parsedMessage.message;
+        const {sender, receiver, text} = parsedMessage.message;
         if(receiver && text){
-            console.log(connection.userId);
             const receiverId = await Users.findOne({username: receiver});
+            const senderId = await Users.findOne({username: sender});
             const msgDoc = await Chats.create({
                 message: text,
-                senderId: connection.userId,
+                senderId: senderId,
                 receiverId: receiverId
             });
 

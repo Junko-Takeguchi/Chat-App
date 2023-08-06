@@ -11,6 +11,7 @@ function InitState() {
             try {
                 // Update the 'userState' atom with the data from the selector
                 setUser({
+                    userId: user._id,
                     username: user.username,
                     firstName: user.firstName,
                     lastName: user.lastName,

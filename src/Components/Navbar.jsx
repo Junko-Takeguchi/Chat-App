@@ -4,10 +4,12 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1.js";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 function Navbar() {
     const [open, setOpen] = useState(false);
     const [username, setUsername] = useState('');
+    const navigate = useNavigate();
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -48,7 +50,8 @@ function Navbar() {
                         size="small"
                         sx={{ marginRight: "2%" }}
                         onClick={() => {
-
+                            localStorage.removeItem('token');
+                            navigate('/');
                         }}
                 >LOGOUT</Button>
             </div>

@@ -37,14 +37,13 @@ function HomePage() {
                     text: msg.text,
                     messageId: msg.messageId
                 }]));
-                // console.log(messages);
             }
         });
     }, [currentUser]);
     return (
         <div style={{width:"100vw", height:"100vh", display: "flex", overflow: "auto"}}>
             <InitState/>
-            <Sidebar onlinePeople={onlinePeople} selectedChat={selectedChat} setSelectedChat={setSelectedChat}></Sidebar>
+            <Sidebar onlinePeople={onlinePeople} selectedChat={selectedChat} setSelectedChat={setSelectedChat} isOnline={true}></Sidebar>
             <MainArea ws={ws} selectedChat={selectedChat}/>
         </div>
     );
