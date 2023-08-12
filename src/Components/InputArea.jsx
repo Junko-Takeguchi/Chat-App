@@ -9,7 +9,7 @@ function InputArea({ws, selectedChat}) {
     const [textMsg, setTextMsg] = useState('');
     const user = useRecoilValue(userState);
     const setMessages = useSetRecoilState(messagesState);
-    return <div style={{height:"8%", backgroundColor:"white", display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"10px"}}>
+    return <div style={{height:"8%", backgroundColor:"white", display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:"10px"}}>
         <TextField
             fullWidth
             placeholder="Type a Message"

@@ -9,7 +9,7 @@ import {userState} from "../Store/userAtom.js";
 import axios from "axios";
 import {messagesState} from "../Store/messageAtom.js";
 
-function Sidebar({ onlinePeople ,selectedChat, setSelectedChat, isOnline }) {
+function Sidebar({ onlinePeople ,selectedChat, setSelectedChat, isOnline, isSidebarOpen }) {
     const setMessages = useSetRecoilState(messagesState);
     const handleChatClick = (person) => {
         setSelectedChat(person);
@@ -29,22 +29,27 @@ function Sidebar({ onlinePeople ,selectedChat, setSelectedChat, isOnline }) {
                 });
         }
     },[selectedChat])
-
-    return (
-        <div style={{ flex: 1, borderRight: "1px solid #3e3c61", backgroundColor: "#3e3c61", overflow: "hidden", margin: 0, padding: 0, display: "flex", flexDirection: "column" }}>
-            <Navbar></Navbar>
-            <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", marginTop: "0" }}>
-                {onlinePeople.map((person) => (
-                    <ChatInfo
-                        key={person}
-                        person={person}
-                        isClicked={selectedChat === person}
-                        isOnline={isOnline}
-                        onClick={() => handleChatClick(person)}
-                    />
-                ))}
+    if (isSidebarOpen){
+        return (
+            <div style={{ flex: 1, borderRight: "1px solid #3e3c61", backgroundColor: "#3e3c61", overflow: "hidden", margin: 0, padding: 0, display: "flex", flexDirection: "column", transition: "0.5s"}}>
+                <Navbar></Navbar>
+                <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", marginTop: "0" }}>
+                    {onlinePeople.map((person) => (
+                        <ChatInfo
+                            key={person}
+                            person={person}
+                            isClicked={selectedChat === person}
+                            isOnline={isOnline}
+                            onClick={() => handleChatClick(person)}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
-    );
+        );
+    } else {
+        return (
+            <div style={{width:0, height: 0}}></div>
+        );
+    }
 }
 export default Sidebar;

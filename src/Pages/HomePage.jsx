@@ -12,6 +12,7 @@ function HomePage() {
     const [onlinePeople, setOnlinePeople] = useState([]);
     const [selectedChat, setSelectedChat] = useState(null);
     const setMessages = useSetRecoilState(messagesState);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 600);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -40,11 +41,16 @@ function HomePage() {
             }
         });
     }, [currentUser]);
+    const handleResize = () => {
+        setIsSidebarOpen(window.innerWidth >= 600);
+    };
+
+    window.addEventListener('resize', handleResize);
     return (
         <div style={{width:"100vw", height:"100vh", display: "flex", overflow: "auto"}}>
             <InitState/>
-            <Sidebar onlinePeople={onlinePeople} selectedChat={selectedChat} setSelectedChat={setSelectedChat} isOnline={true}></Sidebar>
-            <MainArea ws={ws} selectedChat={selectedChat}/>
+            <Sidebar onlinePeople={onlinePeople} selectedChat={selectedChat} setSelectedChat={setSelectedChat} isOnline={true} isSidebarOpen={isSidebarOpen}></Sidebar>
+            <MainArea ws={ws} selectedChat={selectedChat} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}/>
         </div>
     );
 }
